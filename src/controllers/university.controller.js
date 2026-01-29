@@ -1,4 +1,4 @@
-const prisma = require("../prisma/client");
+const prisma = require("../../prisma/client");
 const universities = require("../data/universities");
 const { recommendUniversities } = require("../services/university.logic");
 const { STAGES } = require("../utils/constants");
