@@ -2,36 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
-const authRoutes = require("./routes/auth.routes");
-const onboardingRoutes = require("./routes/onboarding.routes");
-const counsellorRoutes = require("./routes/counsellor.routes");
-const universityRoutes = require("./routes/university.routes");
-const taskRoutes = require("./routes/task.routes");
-const dashboardRoutes = require("./routes/dashboard.routes");
-const profileRoutes = require("./routes/profile.routes");
-
 const app = express();
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: [
-          "'self'",
-          "https://ai-counsellor-backend-ucjh.onrender.com",
-          "https://*.vercel.app",
-        ],
-      },
-    },
-  })
-);
-
+/* 1️⃣ CORS FIRST — before helmet */
 const corsOptions = {
   origin: function (origin, callback) {
     if (
@@ -49,18 +22,28 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-
-
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+
+/* 2️⃣ Helmet AFTER CORS */
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // IMPORTANT — backend does NOT need CSP
+  })
+);
+
+/* 3️⃣ Body parser */
 app.use(express.json());
 
-app.use("/auth", authRoutes);
-app.use("/onboarding", onboardingRoutes);
-app.use("/counsellor", counsellorRoutes);
-app.use("/universities", universityRoutes);
-app.use("/tasks", taskRoutes);
-app.use("/dashboard", dashboardRoutes);
-app.use("/profile", profileRoutes);
+/* 4️⃣ Routes */
+app.use("/auth", require("./routes/auth.routes"));
+app.use("/onboarding", require("./routes/onboarding.routes"));
+app.use("/counsellor", require("./routes/counsellor.routes"));
+app.use("/universities", require("./routes/university.routes"));
+app.use("/tasks", require("./routes/task.routes"));
+app.use("/dashboard", require("./routes/dashboard.routes"));
+app.use("/profile", require("./routes/profile.routes"));
+
+app.get("/", (_, res) => res.json({ status: "OK" }));
 
 module.exports = app;
