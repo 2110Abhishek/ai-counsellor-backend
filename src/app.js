@@ -27,16 +27,25 @@ app.options("*", cors(corsOptions));
 
 /* 2️⃣ Helmet AFTER CORS */
 app.use(
-helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: [
+          "'self'",
+          "https://ai-counsellor-backend-ucjh.onrender.com",
+          "https://*.vercel.app",
+        ],
+      },
     },
-  },
-});
+  })
+);
+
 
 
 /* 3️⃣ Body parser */
