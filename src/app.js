@@ -27,10 +27,17 @@ app.options("*", cors(corsOptions));
 
 /* 2️⃣ Helmet AFTER CORS */
 app.use(
-  helmet({
-    contentSecurityPolicy: false, // IMPORTANT — backend does NOT need CSP
-  })
-);
+helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+    },
+  },
+});
+
 
 /* 3️⃣ Body parser */
 app.use(express.json());
