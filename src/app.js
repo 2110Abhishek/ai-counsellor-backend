@@ -1,35 +1,32 @@
 const express = require("express");
 const cors = require("cors");
 
-const authRoutes = require("./routes/auth.routes");
-const onboardingRoutes = require("./routes/onboarding.routes");
-const counsellorRoutes = require("./routes/counsellor.routes");
-const universityRoutes = require("./routes/university.routes");
-const taskRoutes = require("./routes/task.routes");
-const dashboardRoutes = require("./routes/dashboard.routes");
-const profileRoutes = require("./routes/profile.routes");
-
 const app = express();
 
+// ✅ CORS FIRST
 app.use(cors({
   origin: [
     "http://localhost:5173",
     "https://ai-counsellor-frontend-delta.vercel.app",
-    "https://ai-counsellor-frontend-zrca-3ybtgelk4-2110abhisheks-projects.vercel.app"
+    "https://*.vercel.app"
   ],
   credentials: true,
 }));
 
+// ✅ Explicit preflight handling
 app.options("*", cors());
+
+// ✅ THEN body parser
 app.use(express.json());
 
-app.use("/auth", authRoutes);
-app.use("/onboarding", onboardingRoutes);
-app.use("/counsellor", counsellorRoutes);
-app.use("/universities", universityRoutes);
-app.use("/tasks", taskRoutes);
-app.use("/dashboard", dashboardRoutes);
-app.use("/profile", profileRoutes);
+// ✅ THEN routes
+app.use("/auth", require("./routes/auth.routes"));
+app.use("/onboarding", require("./routes/onboarding.routes"));
+app.use("/counsellor", require("./routes/counsellor.routes"));
+app.use("/universities", require("./routes/university.routes"));
+app.use("/tasks", require("./routes/task.routes"));
+app.use("/dashboard", require("./routes/dashboard.routes"));
+app.use("/profile", require("./routes/profile.routes"));
 
 app.get("/", (req, res) => {
   res.json({ status: "OK" });
