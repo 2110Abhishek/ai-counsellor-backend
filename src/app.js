@@ -8,7 +8,7 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "https://ai-counsellor-frontend-delta.vercel.app",
-    "https://*.vercel.app"
+    /\.vercel\.app$/
   ],
   credentials: true,
 }));
