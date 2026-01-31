@@ -3,18 +3,30 @@ const cors = require("cors");
 
 const app = express();
 
-// ✅ CORS FIRST
-app.use(cors({
+// ✅ Shared CORS Options
+const corsOptions = {
   origin: [
     "http://localhost:5173",
     "https://ai-counsellor-frontend-delta.vercel.app",
-    /\.vercel\.app$/
+    /\.vercel\.app$/, // Allow all Vercel subdomains (regex)
   ],
   credentials: true,
-}));
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// ✅ Request Logger (Debugging)
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log("Origin:", req.headers.origin);
+  next();
+});
+
+// ✅ CORS FIRST
+app.use(cors(corsOptions));
 
 // ✅ Explicit preflight handling
-app.options("*", cors());
+app.options("*", cors(corsOptions));
 
 // ✅ THEN body parser
 app.use(express.json());
